@@ -12,6 +12,8 @@
 
   ## Documentacao
 
+  Neste teste tecnico fiz os scripts pedidos ...(texto) e tambem fiz um backend com testes automatizados para testar as rotas
+
   <h3>Scripts</h3>
 
   Para executar as automacoes criadas siga os passos abaixo:
