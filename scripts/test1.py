@@ -8,23 +8,18 @@ pagamentos = pd.read_csv('./data/pagamentos.csv')
 
 # ------- Tarefa 1 -------
 
-vendas['Comissao'] = vendas['Valor da Venda'].apply(lambda x: clean(x) * 0.1)
-vendas.loc[vendas['Canal de Venda'] == 'Online', 'Comissao'] *= 0.8
-vendas['Comissao_gerente'] = 0
-vendas.loc[vendas['Comissao'] >= 1500, 'Comissao_gerente'] = vendas['Comissao'] * 0.1
-vendas['Comissao_final'] = vendas['Comissao'] - vendas['Comissao_gerente']
+vendas['Valor da Venda'] = vendas['Valor da Venda'].apply(clean)
 
-saida_esperada = vendas[['Nome do Vendedor', 'Comissao', 'Comissao_final']]
-print("Saída Esperada - Cálculo de Comissões:")
-print(saida_esperada)
+vendas['Comissao'] = vendas['Valor da Venda'] * 0.10
+
+vendas['Comissao_Gerente'] = vendas.apply(lambda row: row['Comissao'] * 0.10 if row['Comissao'] >= 1500 else 0, axis=1)
+
+vendas['Canal_Online'] = vendas['Canal de Venda'] == 'Online'
+
+vendas['Comissao_Marketing'] = vendas.apply(lambda row: row['Comissao'] * 0.20 if row['Canal_Online'] else 0, axis=1)
+
+vendas['Valor_Pago'] = vendas['Comissao'] - vendas['Comissao_Gerente'] - vendas['Comissao_Marketing']
+
+print(vendas[['Nome do Vendedor', 'Comissao', 'Valor_Pago']])
 
 # ------- Tarefa 2 ------
-
-pagamentos['Comissão'] = pagamentos['Comissão'].apply(clean)
-pagamentos = pagamentos.merge(vendas[['Nome do Vendedor', 'Comissao_final']], on='Nome do Vendedor', how='left')
-
-pagamentos['Diferenca'] = pagamentos['Comissao_final'] - pagamentos['Comissão']
-pagamentos_incorretos = pagamentos[pagamentos['Diferenca'] != 0]
-
-print("\nSaída Esperada - Validação de Pagamentos:")
-print(pagamentos_incorretos[['Nome do Vendedor', 'Diferenca', 'Comissao_final']])
