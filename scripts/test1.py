@@ -13,6 +13,7 @@ vendas['Valor da Venda'] = vendas['Valor da Venda'].apply(clean)
 vendas['Comissao'] = vendas['Valor da Venda'] * 0.10
 
 vendas['Comissao_Gerente'] = vendas.apply(lambda row: row['Comissao'] * 0.10 if row['Comissao'] >= 1500 else 0, axis=1)
+# ? nunca vau dar 1500
 
 vendas['Canal_Online'] = vendas['Canal de Venda'] == 'Online'
 
@@ -20,6 +21,8 @@ vendas['Comissao_Marketing'] = vendas.apply(lambda row: row['Comissao'] * 0.20 i
 
 vendas['Valor_Pago'] = vendas['Comissao'] - vendas['Comissao_Gerente'] - vendas['Comissao_Marketing']
 
-print(vendas[['Nome do Vendedor', 'Comissao', 'Valor_Pago']])
+# Somar venda total dos vendedor com nomes duplicados
+
+print(vendas[['Nome do Vendedor', 'Comissao', 'Comissao_Gerente', 'Comissao_Marketing', 'Valor_Pago']])
 
 # ------- Tarefa 2 ------
