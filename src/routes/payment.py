@@ -1,6 +1,7 @@
 import csv
 from fastapi import APIRouter, UploadFile, File
 from fastapi.responses import JSONResponse
+from numpy import record
 import pandas as pd
 
 router = APIRouter()
@@ -33,9 +34,9 @@ async def payment(file: UploadFile = File(...)):
 
             vendas_agrupadas['Valor A Ser Pago'] = vendas_agrupadas['Comissao'] - vendas_agrupadas['Comissao_Gerente'] - vendas_agrupadas['Comissao_Marketing']
 
-            data = vendas_agrupadas[['Nome do Vendedor', 'Comissao', 'Valor A Ser Pago']].to_dict()
+            data = vendas_agrupadas[['Nome do Vendedor', 'Comissao', 'Valor A Ser Pago']]
             
-            return {"processed_data": data}
+            return {"data": data.to_dict(orient="records")}
         
         except Exception:
             return JSONResponse(status_code=400, content={"error": "Erro ao processar o arquivo CSV"})

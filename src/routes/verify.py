@@ -35,10 +35,12 @@ async def verify(csv1: UploadFile = File(...), csv2: UploadFile = File(...)):
         pagamentos_comparacao = pd.merge(pagamentos, vendas_agrupadas, on='Nome do Vendedor', how='left')
         pagamentos_incorretos = pagamentos_comparacao[pagamentos_comparacao['Comissão'] != pagamentos_comparacao['Valor A Ser Pago']]
 
-        for column in pagamentos_incorretos.select_dtypes(include=[np.number]).columns:
-            pagamentos_incorretos[column] = pagamentos_incorretos[column].astype(float)
+        pagamentos_incorretos['Valor Pago'] = pagamentos_incorretos['Comissão']
+        pagamentos_incorretos['Valor Correto'] = pagamentos_incorretos['Valor A Ser Pago']
+        
+        data = pagamentos_incorretos[['Nome do Vendedor', 'Valor Pago', 'Valor Correto']]
 
-        return {"data": pagamentos_incorretos.to_dict(orient="records")}
+        return {"data": data.to_dict(orient="records")}
 
     except Exception as e:
         return JSONResponse(status_code=400, content={"error": f"Erro ao processar os arquivos CSV: {str(e)}"})
