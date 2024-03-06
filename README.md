@@ -4,7 +4,7 @@
 
   <img src="./log.png"><br>
 
-  [![Python application](https://github.com/fullzer4/TesteTecnicoAAWZ/actions/workflows/tests.yml/badge.svg)](https://github.com/fullzer4/TesteTecnicoAAWZ/actions/workflows/tests.yml)
+  [![Python Tests](https://github.com/fullzer4/TesteTecnicoAAWZ/actions/workflows/tests.yml/badge.svg)](https://github.com/fullzer4/TesteTecnicoAAWZ/actions/workflows/tests.yml)
   
 </div>
 
