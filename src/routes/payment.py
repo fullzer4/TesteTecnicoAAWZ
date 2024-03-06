@@ -16,17 +16,24 @@ async def payment(file: UploadFile = File(...)):
         try:
             decoded_content = contents.decode('utf-8').splitlines()
             csv_reader = csv.DictReader(decoded_content)
-            
+
             df = pd.DataFrame(csv_reader)
             
             df['Valor da Venda'] = df['Valor da Venda'].apply(clean)
+
             df['Comissao'] = df['Valor da Venda'] * 0.10
-            df['Comissao_Gerente'] = df.apply(lambda row: row['Comissao'] * 0.10 if float(row['Comissao']) >= 1500 else 0, axis=1)
+
             df['Canal_Online'] = df['Canal de Venda'] == 'Online'
+
             df['Comissao_Marketing'] = df.apply(lambda row: row['Comissao'] * 0.20 if row['Canal_Online'] else 0, axis=1)
-            df['Valor_Pago'] = df['Comissao'] - df['Comissao_Gerente'] - df['Comissao_Marketing']
-            
-            data = df[['Nome do Vendedor', 'Comissao', 'Valor_Pago']].to_dict()
+
+            vendas_agrupadas = df.groupby('Nome do Vendedor')[['Comissao', 'Comissao_Marketing']].sum().reset_index()
+
+            vendas_agrupadas['Comissao_Gerente'] = vendas_agrupadas.apply(lambda row: row['Comissao'] * 0.10 if row['Comissao'] >= 1500 else 0, axis=1)
+
+            vendas_agrupadas['Valor A Ser Pago'] = vendas_agrupadas['Comissao'] - vendas_agrupadas['Comissao_Gerente'] - vendas_agrupadas['Comissao_Marketing']
+
+            data = vendas_agrupadas[['Nome do Vendedor', 'Comissao', 'Valor A Ser Pago']].to_dict()
             
             return {"processed_data": data}
         
