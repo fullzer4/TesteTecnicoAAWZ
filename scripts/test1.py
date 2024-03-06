@@ -23,6 +23,7 @@ vendas['Valor_Pago'] = vendas['Comissao'] - vendas['Comissao_Gerente'] - vendas[
 
 # Somar venda total dos vendedor com nomes duplicados
 
+
 print(vendas[['Nome do Vendedor', 'Comissao', 'Comissao_Gerente', 'Comissao_Marketing', 'Valor_Pago']])
 
 # ------- Tarefa 2 ------
